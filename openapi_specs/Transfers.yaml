@@ -1,0 +1,108 @@
+openapi: 3.0.2
+info:
+  title: Transfers API
+  version: 1.0.0
+  description: An API for managing withdrawal
+servers:
+  - url: https://example.com/api/v1
+    description: Production server
+tags:
+  - name: Transfers
+    description: Operations related to transfers
+paths:
+  /Transfers/Create:
+    post:
+      tags:
+        - Transfers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Transfer"
+      responses:
+        "201":
+          description: Transfer created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transfer"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    Transfer:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the transfer
+          readOnly: true
+        amount:
+          $ref: "#/components/schemas/Amount"
+        senderId:
+          type: string
+          format: uuid
+          description: Unique identifier for the sender
+        senderName:
+          type: string
+          description: Sender name
+          example: "Ivanov Ivan Ivanovich"
+        recipientCard:
+          type: string
+          minLength: 8
+          maxLength: 19
+          description: Receiver card number
+          example: "4267345814389798"
+        recipientName:
+          type: string
+          description: Receiver name
+          example: "Petrov Pyotr Petrovich"
+        description:
+          type: string
+          description: Receiver name
+          example: "Happy Birthday Gift"
+        status:
+          type: string
+          readOnly: true
+          description: Phone number of the user
+          enum:
+            - "Created"
+            - "Processing"
+            - "Cancelled"
+            - "Completed"
+      required:
+        - id
+        - senderId
+        - recipientCard
+        - status
+    Amount:
+      type: object
+      description: Information about price
+      properties:
+        value:
+          type: number
+          example: 2537.73
+        currency:
+          type: string
+          example: "Rub"
+        symbolCurrency:
+          type: string
+          example: "₽"
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Numeric error code
+          example: 400
+        message:
+          type: string
+          description: Error message
+          example: "Invalid input data provided"

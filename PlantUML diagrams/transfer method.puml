@@ -1,0 +1,16 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+Sender -> Payment_Service: Post /tranfers
+Payment_Service -> Payment_Service: Check info
+Payment_Service --> Sender: 201, created
+alt Insufficient funds
+Payment_Service --> Sender: 400, bad request
+end
+alt Invalid recipient info
+Payment_Service --> Sender: 400, bad request
+end
+Payment_Service -> Payment_Service: Sending funds
+@enduml
